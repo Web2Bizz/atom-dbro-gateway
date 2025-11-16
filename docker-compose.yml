@@ -13,7 +13,7 @@ services:
     networks:
       - gateway-network
       - atom-external-network
-      - frontend-network
+      - hakaton-network
       - moderator-network
     restart: unless-stopped
     healthcheck:
@@ -25,7 +25,7 @@ services:
     depends_on:
       - postgres
       - backend-app
-      - frontend-app
+      - hakaton-app
       - moderator-app
 
   # Backend services (из services/atom-dbro-backend)
@@ -73,11 +73,11 @@ services:
       - atom-internal-network
     restart: unless-stopped
 
-  # Frontend app (из services/atom-dbro-frontend)
-  frontend-app:
+  # Hakaton frontend (из services/hakaton)
+  hakaton-app:
     build:
-      context: ./services/atom-dbro-frontend
-    container_name: atom-release-frontend-app
+      context: ./services/hakaton
+    container_name: atom-release-hakaton-app
     # Порт не пробрасывается наружу, доступен только через gateway
     expose:
       - "80"
@@ -91,7 +91,7 @@ services:
       retries: 3
       start_period: 40s
     networks:
-      - frontend-network
+      - hakaton-network
 
   # Moderator app frontend (из services/atom-dbro-moderator-app)
   moderator-app:
@@ -122,7 +122,7 @@ networks:
     driver: bridge
   atom-internal-network:
     driver: bridge
-  frontend-network:
+  hakaton-network:
     driver: bridge
   moderator-network:
     driver: bridge
