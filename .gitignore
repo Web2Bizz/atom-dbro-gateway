@@ -1,0 +1,22 @@
+# Logs
+nginx/logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Docker
+.dockerignore
+
+# Environment
+.env
+.env.local
+
