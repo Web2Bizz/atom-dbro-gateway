@@ -3,15 +3,15 @@ version: '3.8'
 services:
   gateway:
     build:
-      context: ./services/gateway
+      context: .
       dockerfile: Dockerfile
     container_name: atom-dbro-gateway
     ports:
       - "16345:80"
     volumes:
-      - ./services/gateway/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./services/gateway/nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./services/gateway/nginx/logs:/var/log/nginx
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/logs:/var/log/nginx
     networks:
       - gateway-network
     restart: unless-stopped
