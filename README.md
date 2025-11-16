@@ -24,6 +24,9 @@ API Gateway на базе Nginx для маршрутизации и балан�
 │   │   ├── default.conf    # Конфигурация сервера
 │   │   └── upstreams.conf  # Настройки upstream серверов
 │   └── logs/               # Директория для логов
+├── scripts/
+│   ├── reload-nginx.sh     # Скрипт перезагрузки (Linux/Mac)
+│   └── reload-nginx.bat    # Скрипт перезагрузки (Windows)
 ├── Dockerfile              # Docker образ для gateway
 ├── docker-compose.yml      # Docker Compose конфигурация
 └── README.md               # Документация
@@ -49,7 +52,7 @@ docker-compose down
 
 ```bash
 # Health check
-curl http://localhost/health
+curl http://localhost:16345/health
 ```
 
 ## Конфигурация
@@ -123,14 +126,39 @@ services:
 nginx -c $(pwd)/nginx/nginx.conf -p $(pwd)/
 ```
 
-### Перезагрузка конфигурации
+### Изменение конфигурации без пересборки
 
-После изменения конфигурации nginx:
+Все конфигурационные файлы nginx монтируются как volumes, поэтому вы можете изменять их без пересборки образа:
+
+- `nginx/nginx.conf` - основная конфигурация
+- `nginx/conf.d/*.conf` - конфигурации серверов и upstream
+
+После изменения конфигурации перезагрузите nginx:
+
+**С помощью скрипта (рекомендуется):**
 
 ```bash
-# Перезагрузка без остановки
+# Linux/Mac
+./scripts/reload-nginx.sh
+
+# Windows
+scripts\reload-nginx.bat
+```
+
+**Или вручную:**
+
+```bash
+# Проверка конфигурации
+docker exec atom-dbro-gateway nginx -t
+
+# Перезагрузка без остановки (если проверка прошла успешно)
+docker exec atom-dbro-gateway nginx -s reload
+
+# Или через docker-compose
 docker-compose exec gateway nginx -s reload
 ```
+
+**Важно:** Скрипты автоматически проверяют конфигурацию перед перезагрузкой. Если конфигурация содержит ошибки, nginx не будет перезагружен.
 
 ## Безопасность
 
