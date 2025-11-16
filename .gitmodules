@@ -1,0 +1,9 @@
+[submodule "services/atom-dbro-moderator-app"]
+	path = services/atom-dbro-moderator-app
+	url = git@github.com:Web2Bizz/atom-dbro-moderator-app.git
+[submodule "services/hakaton"]
+	path = services/hakaton
+	url = git@github.com:Web2Bizz/hakaton.git
+[submodule "services/atom-dbro-backend"]
+	path = services/atom-dbro-backend
+	url = git@github.com:Web2Bizz/atom-dbro-backend.git
