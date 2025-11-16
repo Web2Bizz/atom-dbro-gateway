@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: atom-dbro-gateway
     ports:
-      - "80:80"
+      - "16345:80"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
       - ./nginx/logs:/var/log/nginx
