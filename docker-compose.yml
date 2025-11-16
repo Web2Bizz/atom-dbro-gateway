@@ -1,11 +1,8 @@
-version: '3.8'
-
 services:
   # Gateway service - единая точка входа
   gateway:
     build:
       context: ./services/gateway
-      dockerfile: Dockerfile
     container_name: atom-dbro-gateway
     ports:
       - "3000:80"
@@ -55,9 +52,9 @@ services:
   backend-app:
     build:
       context: ./services/atom-dbro-backend
-      dockerfile: Dockerfile
     container_name: atom-dbro-app
-    ports:
+    # Порт не пробрасывается наружу, доступен только через gateway
+    expose:
       - "3000"
     env_file:
       - ./services/atom-dbro-backend/.env
@@ -80,9 +77,9 @@ services:
   hakaton-app:
     build:
       context: ./services/hakaton
-      dockerfile: Dockerfile
     container_name: hakaton-app
-    ports:
+    # Порт не пробрасывается наружу, доступен только через gateway
+    expose:
       - "80"
     restart: unless-stopped
     environment:
@@ -100,9 +97,9 @@ services:
   moderator-app:
     build:
       context: ./services/atom-dbro-moderator-app
-      dockerfile: Dockerfile
     container_name: atom-dbro-moderator-app
-    ports:
+    # Порт не пробрасывается наружу, доступен только через gateway
+    expose:
       - "80"
     restart: unless-stopped
     healthcheck:
