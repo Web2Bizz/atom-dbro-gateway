@@ -1,13 +1,11 @@
 FROM nginx:alpine
 
-# Копируем конфигурацию nginx
-COPY nginx/nginx.conf /etc/nginx/nginx.conf
-COPY nginx/conf.d/ /etc/nginx/conf.d/
+COPY certs /etc/nginx/certs 
 
 # Создаем директории для логов
 RUN mkdir -p /var/log/nginx
 
-# Открываем порт 80
+EXPOSE 443
 EXPOSE 80
 
 # Запускаем nginx
