@@ -9,9 +9,6 @@ services:
     environment:
       PORT: ${PORT:-3000}
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-atom_dbro}
-    depends_on:
-      postgres:
-        condition: service_healthy
     networks:
       - internal-network
     restart: unless-stopped
@@ -26,9 +23,6 @@ services:
     environment:
       PORT: ${PORT:-3000}
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-atom_dbro}
-    depends_on:
-      postgres:
-        condition: service_healthy
     networks:
       - internal-network
     restart: unless-stopped
