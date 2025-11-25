@@ -42,7 +42,9 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - internal-network
+      internal-network:
+        aliases:
+          - postgres
     restart: unless-stopped
 
   emailer:
@@ -53,7 +55,9 @@ services:
     env_file:
       - ./services/emailer/.env
     networks:
-      - internal-network
+      internal-network:
+        aliases:
+          - emailer
     restart: unless-stopped
     dns:
       - 8.8.8.8
@@ -71,7 +75,9 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - internal-network
+      internal-network:
+        aliases:
+          - redis
     restart: unless-stopped
 
   rabbitmq:
@@ -88,7 +94,9 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - internal-network
+      internal-network:
+        aliases:
+          - rabbitmq
     restart: unless-stopped
 
 volumes:
