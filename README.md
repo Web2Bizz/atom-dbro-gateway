@@ -82,6 +82,17 @@ docker compose -p atom-release up -d --build
 
 ```
 
+# Скрипты запуска
+
+- `scripts/up_infrastructure.sh` — поднимает инфраструктурные сервисы (`docker compose -f infrastructure.yml up -d --build`). Можно передавать дополнительные аргументы командной строки.
+- `scripts/up_apps.sh` — поднимает приложения из `docker-compose.yml`.
+
+Перед первым запуском сделайте скрипты исполняемыми (Linux/macOS):
+
+```
+chmod +x scripts/*.sh
+```
+
 # Архитектура и сети
 
 - Основная информация по сетям и назначению compose файлов описана в [`ARCHITECTURE.md`](ARCHITECTURE.md).
