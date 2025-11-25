@@ -13,7 +13,7 @@ services:
       postgres:
         condition: service_healthy
     networks:
-      - atom-internal-network
+      - internal-network
     restart: unless-stopped
 
   backend-app:
@@ -30,7 +30,7 @@ services:
       postgres:
         condition: service_healthy
     networks:
-      - atom-internal-network
+      - internal-network
     restart: unless-stopped
 
   hakaton-app:
@@ -48,7 +48,7 @@ services:
       retries: 3
       start_period: 40s
     networks:
-      - hakaton-network
+      - frontend-network
 
   frontend-admin-app:
     image: frontend-admin-app:latest
@@ -63,18 +63,15 @@ services:
       retries: 3
       start_period: 40s
     networks:
-      - moderator-network
+      - frontend-network
 
 networks:
+  internal-network:
+    external: true
+    name: atom_internal_network
+  frontend-network:
+    external: true
+    name: atom_frontend_network
   gateway-network:
-    driver: bridge
-  atom-external-network:
-    driver: bridge
-  atom-internal-network:
-    driver: bridge
-  hakaton-network:
-    driver: bridge
-  moderator-network:
-    driver: bridge
-  email-service-network:
-    driver: bridge
+    external: true
+    name: atom_gateway_network
