@@ -96,7 +96,7 @@ chmod +x scripts/*.sh
 # Архитектура и сети
 
 - Основная информация по сетям и назначению compose файлов описана в [`ARCHITECTURE.md`](ARCHITECTURE.md).
-- `infrastructure.yml` поднимает `gateway`, `postgres`, `emailer` и создает сети (`atom_internal_network`, `atom_frontend_network`, `atom_gateway_network`). Его имеет смысл запускать/перезапускать редко:
+- `infrastructure.yml` поднимает `gateway`, `postgres`, `emailer`, `redis`, `rabbitmq` и создает сети (`atom_internal_network`, `atom_frontend_network`, `atom_gateway_network`). Его имеет смысл запускать/перезапускать редко:
 
 ```
 docker compose -f infrastructure.yml up -d --build
@@ -109,7 +109,7 @@ docker compose up -d --build
 ```
 
 - `postgres` пробрасывает порт `${POSTGRES_PORT:-5432}` для администрирования через pgAdmin/psql.
-- RabbitMQ и Redis (если размещены вне репозитория) нужно подключить к сети `atom_internal_network`, чтобы backend имел к ним доступ.
+- Встроенные Redis и RabbitMQ уже находятся в `atom_internal_network`. При использовании внешних экземпляров подключите их к той же сети.
 - Gateway и emailer используют публичные DNS (8.8.8.8/8.8.4.4), поэтому свободно инициируют исходящие соединения (проверки сертификатов, отправка писем).
 
 # Данные для входа

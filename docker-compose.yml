@@ -10,7 +10,9 @@ services:
       PORT: ${PORT:-3000}
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-atom_dbro}
     networks:
-      - internal-network
+      internal-network:
+        aliases:
+          - backend-admin-app
     restart: unless-stopped
 
   backend-app:
@@ -24,7 +26,9 @@ services:
       PORT: ${PORT:-3000}
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-atom_dbro}
     networks:
-      - internal-network
+      internal-network:
+        aliases:
+          - backend-app
     restart: unless-stopped
 
   hakaton-app:
@@ -42,7 +46,9 @@ services:
       retries: 3
       start_period: 40s
     networks:
-      - frontend-network
+      frontend-network:
+        aliases:
+          - hakaton-app
 
   frontend-admin-app:
     image: frontend-admin-app:latest
@@ -57,7 +63,9 @@ services:
       retries: 3
       start_period: 40s
     networks:
-      - frontend-network
+      frontend-network:
+        aliases:
+          - frontend-admin-app
 
 networks:
   internal-network:

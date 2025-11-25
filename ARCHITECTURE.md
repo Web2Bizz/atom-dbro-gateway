@@ -11,21 +11,16 @@
 
 | Сеть | Назначение | Сервисы |
 | --- | --- | --- |
-| `internal-network` | Внутренняя шина данных. Защищенная связь между backend, БД и сервисами поддержки. | `backend-app`, `backend-admin-app`, `postgres`, `emailer`, внешние `rabbitmq/redis`. |
+| `internal-network` | Внутренняя шина данных. Защищенная связь между backend, БД и сервисами поддержки. | `backend-app`, `backend-admin-app`, `postgres`, `emailer`, `redis`, `rabbitmq`. |
 | `frontend-network` | Зона пользовательских интерфейсов. | `hakaton-app`, `frontend-admin-app`, `gateway`. |
 | `gateway-network` | Пограничная зона для трафика из интернета и SSL-терминации. | `gateway` (можно подключать внешние балансировщики). |
 
 Gateway добавлен в `internal-network` и `frontend-network`, поэтому может проксировать запросы к обоим слоям, оставаясь единственной точкой входа.
 
-## Внешние сервисы (RabbitMQ, Redis)
+## Очереди и кеш
 
-RabbitMQ и Redis запускаются вне текущего репозитория, но им необходимо подключиться к `atom_internal_network`. Это можно сделать командой:
-
-```bash
-docker network connect atom_internal_network <service-container>
-```
-
-или при запуске контейнера указать `--network atom_internal_network`.
+Redis и RabbitMQ входят в `infrastructure.yml`, разворачиваются один раз и используют собственные тома (`atom-redis_data`, `atom-rabbitmq_data`).  
+Если требуется подключить внешние экземпляры, достаточно подключить их к сети `atom_internal_network` (через `docker network connect` или флаг `--network` при запуске).
 
 ## Outbound трафик
 
