@@ -19,14 +19,27 @@ API Gateway на базе Nginx для маршрутизации и балан�
 ```
 .
 ├── services/
-│   ├── atom-dbro-backend/          # Бэкенд приложения
-│   ├── atom-dbro-moderator-app/    # Приложение модератора
-│   ├── gateway/                    # Шлюз
-│   └── hakaton/                    # Основное приложение
+│   ├── atom-dbro-backend/          # Основной backend API (подмодуль)
+│   ├── atom-dbro-backend-admin/    # Backend API админки/модерации (подмодуль)
+│   ├── atom-dbro-moderator-app/    # Фронтенд админки/модератора (подмодуль)
+│   ├── hakaton/                    # Основное пользовательское фронтенд‑приложение (подмодуль)
+│   ├── emailer/                    # Email‑сервис (подмодуль)
+│   └── gateway/                    # Nginx‑шлюз
 ├── docker-compose.yml      # Docker Compose конфигурация
 └── README.md               # Документация
 
 ```
+
+## Сервисы (git submodules)
+
+Все приложения лежат в `services/` и подключены как **git submodules**:
+
+- **`services/atom-dbro-backend`**: основной backend API для пользовательского приложения (репозиторий `Web2Bizz/atom-dbro-backend`).
+- **`services/atom-dbro-backend-admin`**: backend API для административной панели и модераторов (репозиторий `Web2Bizz/atom-dbro-admin-api`).
+- **`services/atom-dbro-moderator-app`**: фронтенд‑приложение модератора/админки (репозиторий `Web2Bizz/atom-dbro-moderator-app`).
+- **`services/hakaton`**: основное пользовательское фронтенд‑приложение (репозиторий `Web2Bizz/hakaton`).
+- **`services/emailer`**: сервис рассылки e‑mail уведомлений и служебных писем (репозиторий `Web2Bizz/atom-dbro-email-service`).
+- **`services/gateway`**: конфигурация Nginx‑шлюза, который маршрутизирует запросы между сервисами.
 
 # Быстрый старт
 
@@ -35,15 +48,27 @@ API Gateway на базе Nginx для маршрутизации и балан�
 ```
 # клонировать репозиторий 
 git clone https://github.com/Web2Bizz/atom-dbro-gateway.git
+cd atom-dbro-gateway
 
-# подтянуть подмодули
+# подтянуть подмодули (однократно после клонирования)
 git submodule update --init --recursive
 
 ```
 
+При обновлении версий сервисов внутри монорепозитория:
+
+```
+# обновить код всех подмодулей до зафиксированных в текущем коммите ревизий
+git submodule update --init --recursive
+
+# при необходимости подтянуть последние изменения из origin внутри конкретного сервиса
+cd services/atom-dbro-backend && git pull origin main
+```
+
 ## Конфигурация бэка
 
-в services/atom-dbro-backend нужно создать .env файл с содержимым
+В `services/atom-dbro-backend` нужно создать `.env` файл.  
+Ниже — **минимальная dev‑конфигурация**, которая сразу работает с локальными `postgres` и `minio` из `infrastructure.yml`:
 
 ```env
 # База данных
@@ -63,15 +88,50 @@ JWT_EXPIRES_IN=24h
 DATABASE_URL=postgresql://postgres:postgres@postgres:5432/atom_dbro
 
 # S3 Configuration (ОБЯЗАТЕЛЬНО)
-S3_BUCKET_NAME=your-bucket-name
-S3_ACCESS_KEY_ID=your-access-key-id
-S3_SECRET_ACCESS_KEY=your-secret-access-key
+S3_BUCKET_NAME=my-bucket
+S3_ACCESS_KEY_ID=minioadmin
+S3_SECRET_ACCESS_KEY=minioadmin
 S3_REGION=us-east-1
+
+# Пример для локального MinIO (поднимается в infrastructure.yml)
+S3_ENDPOINT=http://minio:9000
+S3_FORCE_PATH_STYLE=true
 
 # S3 Configuration (опционально, для кастомных провайдеров)
 # S3_ENDPOINT=https://s3.ru1.storage.beget.cloud
 # S3_PUBLIC_URL_TEMPLATE=https://{bucket}.s3.{region}.amazonaws.com/{key}
 # S3_FORCE_PATH_STYLE=true
+```
+
+## Конфигурация admin-бэка
+
+Аналогично, в `services/atom-dbro-backend-admin` нужен файл `.env`.  
+Для быстрого старта можно использовать те же значения, что и для основного бэка:
+
+```env
+# База данных
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=atom_dbro
+POSTGRES_PORT=5432
+
+# Приложение
+PORT=3000
+
+# JWT
+JWT_SECRET=dev-secret-key-change-in-production
+JWT_EXPIRES_IN=24h
+
+# Database URL
+DATABASE_URL=postgresql://postgres:postgres@postgres:5432/atom_dbro
+
+# S3 Configuration (локальный MinIO)
+S3_BUCKET_NAME=my-bucket
+S3_ACCESS_KEY_ID=minioadmin
+S3_SECRET_ACCESS_KEY=minioadmin
+S3_REGION=us-east-1
+S3_ENDPOINT=http://minio:9000
+S3_FORCE_PATH_STYLE=true
 ```
 
 ## Docker compose
@@ -114,5 +174,7 @@ docker compose up -d --build
 
 # Данные для входа
 
-email: ivan@example.com
-password: password123
+| Роль               | Email                   | Пароль       |
+|--------------------|-------------------------|--------------|
+| Обычный пользователь | ivan@example.com        | password123  |
+| Админ              | admin-atom@example.com | password123  |

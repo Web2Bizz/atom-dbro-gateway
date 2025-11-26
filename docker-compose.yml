@@ -1,5 +1,8 @@
 services:
   backend-admin-app:
+    build:
+      context: ./services/atom-dbro-backend-admin
+      dockerfile: Dockerfile
     image: backend-admin-app:latest
     container_name: atom-release-admin-backend-app
     expose:
@@ -9,6 +12,17 @@ services:
     environment:
       PORT: ${PORT:-3000}
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-atom_dbro}
+      # JWT (дефолт для dev, можно переопределить через переменные окружения)
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-key-change-in-production}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-24h}
+
+      # S3 / MinIO (дефолтная локальная конфигурация)
+      S3_BUCKET_NAME: ${S3_BUCKET_NAME:-my-bucket}
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-minioadmin}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-minioadmin}
+      S3_REGION: ${S3_REGION:-us-east-1}
+      S3_ENDPOINT: ${S3_ENDPOINT:-http://minio:9000}
+      S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE:-true}
     networks:
       internal-network:
         aliases:
@@ -16,6 +30,9 @@ services:
     restart: unless-stopped
 
   backend-app:
+    build:
+      context: ./services/atom-dbro-backend
+      dockerfile: Dockerfile
     image: backend-app:latest
     container_name: atom-release-backend-app
     expose:
@@ -25,6 +42,17 @@ services:
     environment:
       PORT: ${PORT:-3000}
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-atom_dbro}
+      # JWT (дефолт для dev, можно переопределить через переменные окружения)
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-key-change-in-production}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-24h}
+
+      # S3 / MinIO (дефолтная локальная конфигурация)
+      S3_BUCKET_NAME: ${S3_BUCKET_NAME:-my-bucket}
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-minioadmin}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-minioadmin}
+      S3_REGION: ${S3_REGION:-us-east-1}
+      S3_ENDPOINT: ${S3_ENDPOINT:-http://minio:9000}
+      S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE:-true}
     networks:
       internal-network:
         aliases:
@@ -32,6 +60,9 @@ services:
     restart: unless-stopped
 
   hakaton-app:
+    build:
+      context: ./services/hakaton
+      dockerfile: Dockerfile
     image: atom-front-app:latest
     container_name: atom-release-hakaton-app
     expose:
@@ -51,6 +82,9 @@ services:
           - hakaton-app
 
   frontend-admin-app:
+    build:
+      context: ./services/atom-dbro-moderator-app
+      dockerfile: Dockerfile
     image: frontend-admin-app:latest
     container_name: atom-release-admin-frontend-app
     expose:

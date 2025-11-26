@@ -48,12 +48,39 @@ services:
     restart: unless-stopped
 
   emailer:
+    build:
+      context: ./services/emailer
+      dockerfile: Dockerfile
     image: emailer:latest
     container_name: atom-release-emailer
     ports:
       - "9500"
     env_file:
       - ./services/emailer/.env
+    environment:
+      # Application
+      NODE_ENV: ${EMAILER_NODE_ENV:-development}
+      PORT: ${EMAILER_PORT:-3000}
+      APP_NAME: ${EMAILER_APP_NAME:-Atom DBRO Email Service}
+
+      # Email configuration (дефолт — заглушка, для реальной отправки писем переопределите эти переменные)
+      MAIL_HOST: ${MAIL_HOST:-smtp.example.com}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USER: ${MAIL_USER:-user@example.com}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-password}
+      MAIL_FROM: ${MAIL_FROM:-noreply@example.com}
+      MAIL_SECURE: ${MAIL_SECURE:-false}
+
+      # RabbitMQ (по умолчанию использует локальный контейнер rabbitmq из этого же файла)
+      RABBITMQ_URL: ${RABBITMQ_URL:-amqp://rabbitmq:5672}
+      RABBITMQ_HOST: ${RABBITMQ_HOST:-rabbitmq}
+      RABBITMQ_PORT: ${RABBITMQ_PORT:-5672}
+      RABBITMQ_USER: ${RABBITMQ_USER:-guest}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-guest}
+      RABBITMQ_VHOST: ${RABBITMQ_VHOST:-/}
+      RABBITMQ_QUEUE: ${RABBITMQ_QUEUE:-email_queue}
+      RABBITMQ_EXCHANGE: ${RABBITMQ_EXCHANGE:-email_exchange}
+      RABBITMQ_HEARTBEAT: ${RABBITMQ_HEARTBEAT:-60}
     networks:
       internal-network:
         aliases:
@@ -125,6 +152,24 @@ services:
       - internal-network
     restart: unless-stopped
 
+  minio:
+    image: minio/minio:latest
+    container_name: atom-release-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+    volumes:
+      - atom-minio_data:/data
+    ports:
+      - "9000:9000"  # S3 API
+      - "9001:9001"  # MinIO console
+    networks:
+      internal-network:
+        aliases:
+          - minio
+    restart: unless-stopped
+
 volumes:
   atom-back_postgres_data:
     external: true
@@ -135,6 +180,8 @@ volumes:
   atom-prometheus_data:
     driver: local
   atom-grafana_data:
+    driver: local
+  atom-minio_data:
     driver: local
 
 networks:

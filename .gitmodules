@@ -1,0 +1,15 @@
+[submodule "services/atom-dbro-moderator-app"]
+	path = services/atom-dbro-moderator-app
+	url = https://github.com/Web2Bizz/atom-dbro-moderator-app.git
+[submodule "services/atom-dbro-backend"]
+	path = services/atom-dbro-backend
+	url = https://github.com/Web2Bizz/atom-dbro-backend.git
+[submodule "services/atom-dbro-backend-admin"]
+	path = services/atom-dbro-backend-admin
+	url = https://github.com/Web2Bizz/atom-dbro-admin-api.git
+[submodule "services/hakaton"]
+	path = services/hakaton
+	url = https://github.com/Web2Bizz/hakaton.git
+[submodule "services/emailer"]
+	path = services/emailer
+	url = https://github.com/Web2Bizz/atom-dbro-email-service.git

@@ -19,8 +19,10 @@ Gateway добавлен в `internal-network` и `frontend-network`, поэто
 
 ## Очереди и кеш
 
-Redis и RabbitMQ входят в `infrastructure.yml`, разворачиваются один раз и используют собственные тома (`atom-redis_data`, `atom-rabbitmq_data`).  
+Redis, RabbitMQ и MinIO входят в `infrastructure.yml`, разворачиваются один раз и используют собственные тома (`atom-redis_data`, `atom-rabbitmq_data`, `atom-minio_data`).  
 Если требуется подключить внешние экземпляры, достаточно подключить их к сети `atom_internal_network` (через `docker network connect` или флаг `--network` при запуске).
+
+MinIO поднимается в `internal-network` и доступен по имени хоста `minio` (порт `9000` для S3 API и `9001` для web‑консоли). Backend может использовать его как S3‑совместимое хранилище.
 
 ## Outbound трафик
 
