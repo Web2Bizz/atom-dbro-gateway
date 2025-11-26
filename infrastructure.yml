@@ -102,12 +102,39 @@ services:
           - rabbitmq
     restart: unless-stopped
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: atom-release-prometheus
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - atom-prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - internal-network
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: atom-release-grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - atom-grafana_data:/var/lib/grafana
+    networks:
+      - internal-network
+    restart: unless-stopped
+
 volumes:
   atom-back_postgres_data:
     external: true
   atom-redis_data:
     driver: local
   atom-rabbitmq_data:
+    driver: local
+  atom-prometheus_data:
+    driver: local
+  atom-grafana_data:
     driver: local
 
 networks:
