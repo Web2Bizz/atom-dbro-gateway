@@ -1,0 +1,20 @@
+{
+  "name": "k6-load-tests",
+  "version": "1.0.0",
+  "description": "Нагрузочное тестирование API через k6",
+  "scripts": {
+    "test:public": "k6 run public-api.load.test.js",
+    "test:admin": "k6 run admin-api.load.test.js",
+    "test:public:save": "./run-test.sh public-api",
+    "test:admin:save": "./run-test.sh admin-api",
+    "compare": "node compare-results.js"
+  },
+  "keywords": [
+    "k6",
+    "load-testing",
+    "performance"
+  ],
+  "author": "",
+  "license": "ISC"
+}
+

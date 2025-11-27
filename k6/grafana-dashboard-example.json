@@ -1,0 +1,118 @@
+{
+  "dashboard": {
+    "title": "K6 Load Test Metrics",
+    "tags": ["k6", "load-testing"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "HTTP Request Duration (p95)",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(k6_http_req_duration_bucket[5m]))",
+            "legendFormat": "p95"
+          },
+          {
+            "expr": "histogram_quantile(0.99, rate(k6_http_req_duration_bucket[5m]))",
+            "legendFormat": "p99"
+          },
+          {
+            "expr": "rate(k6_http_req_duration_sum[5m]) / rate(k6_http_req_duration_count[5m])",
+            "legendFormat": "avg"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "ms",
+            "label": "Duration"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "id": 2,
+        "title": "HTTP Request Failed Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(k6_http_req_failed[5m]) * 100",
+            "legendFormat": "Failed %"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "percent",
+            "label": "Failed Rate"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        }
+      },
+      {
+        "id": 3,
+        "title": "HTTP Requests Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(k6_http_reqs[5m])",
+            "legendFormat": "Requests/sec"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "reqps",
+            "label": "Rate"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 8
+        }
+      },
+      {
+        "id": 4,
+        "title": "Virtual Users",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "k6_vus",
+            "legendFormat": "VUs"
+          },
+          {
+            "expr": "k6_vus_max",
+            "legendFormat": "Max VUs"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "short",
+            "label": "Users"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 8
+        }
+      }
+    ],
+    "refresh": "10s",
+    "schemaVersion": 27,
+    "version": 1
+  },
+  "note": "Это пример конфигурации дашборда Grafana для метрик k6. Импортируйте в Grafana через UI или API. Метрики доступны только если k6 запущен с --out prometheus-rw"
+}
+

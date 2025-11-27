@@ -1,0 +1,10 @@
+# Результаты нагрузочных тестов
+results/*
+!results/.gitkeep
+*.json
+!package.json
+!grafana-dashboard-example.json
+
+# Логи
+*.log
+
