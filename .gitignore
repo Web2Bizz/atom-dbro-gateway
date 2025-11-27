@@ -25,6 +25,6 @@ backups/*
 !backups/.gitkeep
 
 services/**/*
-!services/gateway/**
+!services/gateway/**/*
 !services/**/.env.example
 !services/**/.gitkeep
