@@ -24,3 +24,7 @@ Thumbs.db
 backups/*
 !backups/.gitkeep
 
+services/**/*
+!services/gateway/**
+!services/**/.env.example
+!services/**/.gitkeep
