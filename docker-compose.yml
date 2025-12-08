@@ -68,7 +68,7 @@ services:
           - frontend-admin-app
 
   chatty-app:
-    image: chatty-app:latest
+    image: chatty:latest
     container_name: atom-release-chatty-app
     expose:
       - "3000"
