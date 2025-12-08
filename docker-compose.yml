@@ -67,6 +67,13 @@ services:
         aliases:
           - frontend-admin-app
 
+  chatty-app:
+    image: chatty-app:latest
+    container_name: atom-release-chatty-app
+    expose:
+      - "3000"
+    restart: unless-stopped
+
 networks:
   internal-network:
     external: true
