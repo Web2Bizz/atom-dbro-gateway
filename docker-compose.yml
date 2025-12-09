@@ -73,6 +73,10 @@ services:
     expose:
       - "3000"
     restart: unless-stopped
+    networks:
+      internal-network:
+        aliases:
+          - chatty-app
 
 networks:
   internal-network:
