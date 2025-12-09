@@ -70,6 +70,8 @@ services:
   chatty-app:
     image: chatty:latest
     container_name: atom-release-chatty-app
+    env_file:
+      - ./services/chatty/.env
     expose:
       - "3000"
     restart: unless-stopped
